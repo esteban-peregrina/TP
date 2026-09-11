@@ -1,0 +1,83 @@
+% ============================
+% TP Report – Simple Two-Column Template
+% ============================
+\documentclass[10pt,a4paper,twocolumn]{article}
+
+% ---- Encoding & typography (simple, portable) ----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ---- Layout ----
+\usepackage{geometry}
+\geometry{
+  left=1.5cm, right=1.5cm,
+  top=1.6cm, bottom=1.6cm,
+  columnsep=0.6cm
+}
+\usepackage{balance} % balances the final page columns
+
+% ---- Graphics ----
+\usepackage{graphicx}
+\usepackage[font=small,labelfont=bf]{caption}
+
+% ---- Useful tweaks (optional) ----
+\setlength{\parskip}{0pt}   % compact paragraphs
+\setlength{\parindent}{1em} % classic indent; comment out if you prefer no indents
+
+% ============================
+%            Title
+% ============================
+\title{\vspace{-6mm}\textbf{TP Report Title: Short and Informative}}
+\author{Student Name \quad (Group/Class) \\ Instructor: Name \quad Lab: Name}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+% ============================
+%         One-sentence intro
+% ============================
+% Keep this to 2–3 lines max; no abstract section to stay minimal.
+\noindent\textbf{Context.} One or two sentences to introduce the practical work and goal.
+
+% ============================
+%           Sections
+% ============================
+\section*{Problem Statement}
+State the task/problem in 2--4 sentences: what is the input, desired output, and key constraint(s).
+
+\section*{Method and Implementation}
+Briefly describe your approach/algorithm or technique. Mention the idea and why it fits the problem. \\
+
+Languages/tools used, key implementation details, special libraries or parameters, and any assumptions.
+
+% ============================
+%     Main Results Figure
+% ============================
+% Use figure* to span both columns. Replace results.pdf with your image file.
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.45\textwidth]{fig_parameters.png}
+  \caption{One figure that summarizes the main result. Make the caption self-contained:
+  what the figure shows, how to read it, and the key takeaway in one sentence.}
+  \label{fig:summary}
+\end{figure}
+
+\section*{Results}
+Very briefly describe what Figure~\ref{fig:summary} shows (numbers or qualitative outcomes). 
+Highlight success criteria (e.g., accuracy, runtime, error) and whether they were met.
+
+\section*{Conclusion}
+One or two sentences to conclude. Then list 2--3 bullets on what you learned:
+\begin{itemize}
+  \item Key technical insight learned.
+  \item A practical/implementation tip you discovered.
+  \item (Optional) A limitation or next step you would try.
+\end{itemize}
+
+% Balance last page columns and end.
+\balance
+
+\end{document}
