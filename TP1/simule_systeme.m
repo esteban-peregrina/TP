@@ -22,13 +22,13 @@ alpha = step(G1, t);
 vit_alpha = step(G1 * s, t);
 acc_alpha = step(G1 * s^2, t);
 
-beta = step(G1, t);
-vit_beta = step(G1 * s, t);
-acc_beta = step(G1 * s^2, t);
+beta = step(G2, t);
+vit_beta = step(G2 * s, t);
+acc_beta = step(G2 * s^2, t);
 
-gamma = step(G1, t);
-vit_gamma = step(G1 * s, t);
-acc_gamma = step(G1 * s^2, t);
+gamma = step(G3, t);
+vit_gamma = step(G3 * s, t);
+acc_gamma = step(G3 * s^2, t);
 
 f = F1 * alpha + F2 * beta;
 
