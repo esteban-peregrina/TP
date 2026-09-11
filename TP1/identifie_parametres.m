@@ -1,11 +1,11 @@
-N = length(t);
+N = 9;
 
 A=[];
 Y=[];
 
-phi = @(x) [x(1), x(1)-x(4),          0,     0, x(2)-x(5),         0,       x(3),        0,        0;
-            0   , x(4)-x(1),  x(4)-x(7),     0, x(5)-x(2), x(5)-x(8),          0,     x(6),        0;
-            0   ,         0,  x(7)-x(4),     0,         0, x(8)-x(5),          0,        0,      x(9)];
+phi = @(x) [x(1),  x(1)-x(4),          0,  x(2),  x(2)-x(5),          0,     x(3),        0,        0;
+               0,  x(4)-x(1),  x(4)-x(7),     0,  x(5)-x(2),  x(5)-x(8),        0,     x(6),        0;
+               0,          0,  x(7)-x(4),     0,          0,  x(8)-x(5),        0,        0,     x(9)   ];
 
 for n = 1:N
     x = [alpha(n), vit_alpha(n), acc_alpha(n), beta(n), vit_beta(n), acc_beta(n), gamma(n), vit_gamma(n), acc_gamma(n)];
