@@ -1,11 +1,24 @@
 clear all;
 
 %% Parametres
- K = [300 ; 100 ; 50] % K0, k1, k2 en N/m
- B = [30  ; 40  ; 8 ] % b0, b1, b2 en Ns/m
- M = [1   ; 1   ; 4 ] % m1, m2, m3 en kg
+k0 = 300; % N/m
+k1 = 100; % N/m
+k2 = 50;  % N/m
+
+b0 = 30; % Ns/m
+b1 = 40; % Ns/m
+b2 = 8;  % Ns/m
+
+m1 = 1; % kg
+m2 = 1; % kg
+m3 = 4; % kg
 
  %% transfer functions
- F1 = [K(1)+K(2); B(0)+B(1); M(0)]
- F2 = -[K(1)];
- .
+ F1 = [k1+k0 , b0+b1, m1]
+ F2 = -[k1, b1];
+ F3 = F2;
+ F4 = [k1+k2, b1+b2, m2];
+ F5 = -[k2, b2];
+ F6 = F5;
+ F7 = [k2, b2, m3];
+ 
