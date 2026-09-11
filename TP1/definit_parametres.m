@@ -13,15 +13,3 @@ m1 = 1; % kg
 m2 = 1; % kg
 m3 = 4; % kg
 
-%% transfer functions
-F1 = [k1+k0 , b0+b1, m1]
-F2 = -[k1, b1];
-F3 = F2;
-F4 = [k1+k2, b1+b2, m2];
-F5 = -[k2, b2];
-F6 = F5;
-F7 = [k2, b2, m3];
-
-G1 = minreal(1/(F1-(F2F3/(F4-F5*F6/F7))));
-G2 = minreal(-F3*G1/(F4-F5*F6/F7));
-G3 = minreal(-F6*G2/F7);
