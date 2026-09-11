@@ -1,6 +1,6 @@
+%% Transfer functions
 s = tf('s');
 
-%% Transfer functions
 % Cleaning equations 
 F1 = k1+k0 + (b0+b1)*s + m1*s^2;
 F2 = -(k1+b1*s);
