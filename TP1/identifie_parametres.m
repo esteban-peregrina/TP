@@ -18,14 +18,14 @@ cond(A)
 
 p_find = A \ Y;
 
-k0_find = p_find(1)
-k1_find = p_find(2)
-k2_find = p_find(3)
+k0_find = p_find(1);
+k1_find = p_find(2);
+k2_find = p_find(3);
 
-b0_find = p_find(4)
-b1_find = p_find(5)
-b2_find = p_find(6)
+b0_find = p_find(4);
+b1_find = p_find(5);
+b2_find = p_find(6);
 
-m1_find = p_find(7)
-m2_find = p_find(8)
-m3_find = p_find(9)
+m1_find = p_find(7);
+m2_find = p_find(8);
+m3_find = p_find(9);
