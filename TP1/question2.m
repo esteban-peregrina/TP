@@ -33,14 +33,14 @@ acc_beta = acc_beta_quantifiee;
 acc_gamma = acc_gamma_quantifiee;
 
 %% identification des paramètres
-N = 9; % nombre de mesures
+N = 801; % nombre de mesures
 %N = length(t); %bcp de mesure (801)
 
 %on varie les mesures
 
-indice = 1:N; %9 mesures, indice à 0.01s, 0.02s 0.03s
-%indice = round(linspace(1, length(t), N)); %9 mesures, indice à 1s, 2s, 3s ,...
-%indice = [113 168 206]; %point interresant pour avoir des equations indépendantes et trouver les parametre en seulement 3 mesures
+indice = 1:N; %N mesures, indice à 0.01s, 0.02s 0.03s
+%indice = round(linspace(1, length(t), N)); %N mesures, indice à 1s, 2s, 3s ,...
+%indice = [113 168 206]; %point interresant pour avoir des equations indépendantes et trouver les parametre en seulement 3 mesures 
 
 
 alpha = alpha(indice);

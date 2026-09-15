@@ -15,8 +15,8 @@ N = 801; % nombre de mesures
 
 %on varie les mesures
 
-indice = 1:N; %9 mesures, indice à 0.01s, 0.02s 0.03s
-%indice = round(linspace(1, length(t), N)); %9 mesures, indice à 1s, 2s, 3s ,...
+indice = 1:N; %N mesures, indice à 0.01s, 0.02s 0.03s
+%indice = round(linspace(1, length(t), N)); %N mesures, indice à 1s, 2s, 3s ,...
 %indice = [113 168 206]; %point interresant pour avoir des equations indépendantes et trouver les parametre en seulement 3 mesures
 
 
