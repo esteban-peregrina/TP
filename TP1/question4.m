@@ -94,17 +94,17 @@ indice = 1:N; % N mesures, indice vaut 0.01s, 0.02s, 0.03s, ...
 %indice = [113 168 206]; % Points remarquables pour avoir des equations indépendantes et trouver les parametre en seulement 3 mesures
 
 % Récupération des mesures
-alpha = alpha(indice);
-vit_alpha = vit_alpha(indice);
-acc_alpha = acc_alpha(indice);
+alpha = f_alpha(indice);
+vit_alpha = f_vit_alpha(indice);
+acc_alpha = f_acc_alpha(indice);
 
-beta = beta(indice);
-vit_beta = vit_beta(indice);
-acc_beta = acc_beta(indice);
+beta = f_beta(indice);
+vit_beta = f_vit_beta(indice);
+acc_beta = f_acc_beta(indice);
 
-gamma = gamma(indice);
-vit_gamma = vit_gamma(indice);
-acc_gamma = acc_gamma(indice);
+gamma = f_gamma(indice);
+vit_gamma = f_vit_gamma(indice);
+acc_gamma = f_acc_gamma(indice);
 
 %% Identification des paramètres
 identifie_parametres % Appel les mesures en mémoire
@@ -128,4 +128,4 @@ fprintf('m2         %f      %f      %f\n', m2, m2_find, erreur(8));
 fprintf('m3         %f      %f      %f\n', m3, m3_find, erreur(9));
 
 erreur_moyenne = mean(erreur);
-fprintf('Erreur Moyenne : %f', erreur_moyenne);
+fprintf('Erreur Moyenne : %f\n', erreur_moyenne);
