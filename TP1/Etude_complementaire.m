@@ -1,7 +1,6 @@
 clear all;
 close all;
 clc;
-% Je vois pas trop l'impact que k1 et b1 ont
 %% Declaration des paramètres
 definit_parametres
 % Écrasement des paramètres par défaut
