@@ -1,14 +1,14 @@
 clear all;
 close all;
 clc;
-
-%% Déclaration des paramètres
+% Je vois pas trop l'impact que k1 et b1 ont
+%% Declaration des paramètres
 definit_parametres
 % Écrasement des paramètres par défaut
-k1 = 5000;
-b1 = 400;
+k1 = 500000;
+b1 = 40000;
 
-%% Simulation du système
+%% simulation du système
 simule_systeme
 
 %% Quantification
@@ -43,47 +43,6 @@ acc_alpha = acc_alpha_quantifiee;
 acc_beta = acc_beta_quantifiee;
 acc_gamma = acc_gamma_quantifiee;
 
-%% Filtrage
-% Choix du filtre
-u = 1; % À déterminer expérimentalement, u=1 correspond a l'absence de filtre
-
-% Filtrage
-f_alpha = filtfilt([1 u-1], u, alpha_quantifiee);
-f_beta  = filtfilt([1 u-1], u, beta_quantifiee);
-f_gamma = filtfilt([1 u-1], u, gamma_quantifiee);
-
-f_vit_alpha = filtfilt([1 u-1], u, vit_alpha_quantifiee);
-f_vit_beta  = filtfilt([1 u-1], u, vit_beta_quantifiee);
-f_vit_gamma = filtfilt([1 u-1], u, vit_gamma_quantifiee);
-
-f_acc_alpha = filtfilt([1 u-1], u, acc_alpha_quantifiee);
-f_acc_beta  = filtfilt([1 u-1], u, acc_beta_quantifiee);
-f_acc_gamma = filtfilt([1 u-1], u, acc_gamma_quantifiee);
-
-% Comparaison graphique des signaux filtrés et quantifiés
-figure;
-
-subplot(3,1,1)
-plot(t,alpha_quantifiee)
-hold on
-plot(t,f_alpha)
-legend('Quantifié','Filtré')
-title('Position alpha')
-
-subplot(3,1,2)
-plot(t,vit_alpha_quantifiee)
-hold on
-plot(t,f_vit_alpha)
-legend('Quantifié','Filtré')
-title('Vitesse alpha')
-
-subplot(3,1,3)
-plot(t,acc_alpha_quantifiee)
-hold on
-plot(t,f_acc_alpha)
-legend('Quantifié','Filtré')
-title('Accélération alpha')
-
 %% Sélection des mesures
 N = 801; % Nombre de mesures
 %N = length(t); %bcp de mesure (801)
@@ -107,25 +66,29 @@ vit_gamma = vit_gamma(indice);
 acc_gamma = acc_gamma(indice);
 
 %% Identification des paramètres
-identifie_parametres % Appel les mesures en mémoire
+identifie_parametres_identifiable % Appel les mesures en mémoire
 
 %% Affichage des paramètres
 parametres_identifie = p_find.' ; % On transpose p_find (écrit en mémoire par identifie_parametres)
-parametre_reel = [k0 k1 k2 b0 b1 b2 m1 m2 m3];
+
+parametre_reel = [k0 k2 b0 b2 m1+m2 m3];
+
 
 % Erreur en pourcentage
 erreur = 100 * abs(parametres_identifie - parametre_reel) ./ parametre_reel;
 
 fprintf('Paramètre        reel        identifie       Erreur (%%) \n\n');
+
 fprintf('k0         %f      %f      %f\n', k0, k0_find, erreur(1));
-fprintf('k1         %f      %f      %f\n', k1, k1_find, erreur(2));
-fprintf('k2         %f      %f      %f\n', k2, k2_find, erreur(3));
-fprintf('b0         %f      %f      %f\n', b0, b0_find, erreur(4));
-fprintf('b1         %f      %f      %f\n', b1, b1_find, erreur(5));
-fprintf('b2         %f      %f      %f\n', b2, b2_find, erreur(6));
-fprintf('m1         %f      %f      %f\n', m1, m1_find, erreur(7));
-fprintf('m2         %f      %f      %f\n', m2, m2_find, erreur(8));
-fprintf('m3         %f      %f      %f\n', m3, m3_find, erreur(9));
+fprintf('k2         %f      %f      %f\n', k2, k2_find, erreur(2));
+fprintf('b0         %f      %f      %f\n', b0, b0_find, erreur(3));
+fprintf('b2         %f      %f      %f\n', b2, b2_find, erreur(4));
+fprintf('m1+m2      %f      %f      %f\n', m1+m2, m12_find, erreur(5));
+fprintf('m3         %f      %f      %f\n', m3, m3_find, erreur(6));
 
 erreur_moyenne = mean(erreur);
 fprintf('Erreur Moyenne : %f', erreur_moyenne);
+
+
+
+
