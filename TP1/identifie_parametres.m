@@ -1,21 +1,36 @@
 A=[];
 Y=[];
 
-phi = @(x) [x(1), x(1)-x(4),          0,     x(2), x(2)-x(5),         0,       x(3),        0,        0;
-            0   , x(4)-x(1),  x(4)-x(7),        0, x(5)-x(2), x(5)-x(8),          0,     x(6),        0;
-            0   ,         0,  x(7)-x(4),        0,         0, x(8)-x(5),          0,        0,      x(9)];
+%% Data concatenation
+% Defining concatenation matrix
+phi = @(X) [X(1),   X(1)-X(4),           0,   X(2),   X(2)-X(5),           0,   X(3),      0,       0;
+               0,   X(4)-X(1),   X(4)-X(7),      0,   X(5)-X(2),   X(5)-X(8),      0,   X(6),       0;
+               0,           0,   X(7)-X(4),      0,           0,   X(8)-X(5),      0,      0,   X(9)];
 
+% Adding data
 for n = 1:N
-    x = [alpha(n), vit_alpha(n), acc_alpha(n), beta(n), vit_beta(n), acc_beta(n), gamma(n), vit_gamma(n), acc_gamma(n)];
+    % Data vector (depends on parameters)
+    X = [alpha(n), 
+     vit_alpha(n), 
+     acc_alpha(n), 
+          beta(n), 
+      vit_beta(n), 
+      acc_beta(n), 
+         gamma(n), 
+     vit_gamma(n), 
+     acc_gamma(n)];
 
-    A = [A; phi(x)];
+    % Data vector
+    A = [A; phi(X)];
 
+    % Output vector
     Y = [Y; 1 ; 0 ; 0];
 end 
 
 size(A)
 cond(A)
 
+%% Solving
 p_find = A \ Y;
 
 k0_find = p_find(1);
