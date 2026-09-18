@@ -18,12 +18,12 @@ N1=20.25;
 
 
 %% Construction de la matrice Y.
-for k=1:??
-    Y(i,??) = ??
-    u(i,??) = ??
+for k=1:length(i2)
+    Y(k,:) = [cos(q2(k)) sign(qp2(k)) qp2(k) 1];
+    u(k,:) = N2*kc2*i2(k);
 end
 %% Calcul des paramètres
-p=??;
+p=Y\u;
 
 %% Affichage des résultats.
 format long
