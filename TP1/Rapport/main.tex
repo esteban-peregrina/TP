@@ -12,9 +12,9 @@
 % ---- Layout ----
 \usepackage{geometry}
 \geometry{
-  left=1.5cm, right=1.5cm,
-  top=1.6cm, bottom=1.6cm,
-  columnsep=0.6cm
+  left=1.4cm, right=1.4cm,
+  top=1.5cm, bottom=1.5cm,
+  columnsep=0.55cm
 }
 \usepackage{balance} % balances the final page columns
 
@@ -29,33 +29,45 @@
 % ============================
 %            Title
 % ============================
-\title{\vspace{-6mm}\textbf{TP Report Title: Identification d’un Système Mécanique
+\title{\vspace{-6mm}\textbf{TP1: Identification d’un Système Mécanique
 Linéaire}}
-\author{Léo Sabatié, Esteban Peregrina\quad (Groupe 2, ROB5) \\ Instructor: Mahdi Khoramshahi \quad School: Polytech Sorbonne}
+\author{Léo Sabatié, Esteban Peregrina \quad (Groupe 2, ROB5) \\ Enseignant: Mahdi Khoramshahi \quad École: Polytech Sorbonne}
 \date{\today}
 
 \begin{document}
 \maketitle
 
 % ============================
-%         One-sentence intro
-% ============================
-% Keep this to 2–3 lines max; no abstract section to stay minimal.
-\noindent\textbf{Context.} Ce premier TP d'identification paramétrique 
-nous introduit aux concepts fondamentaux de cette UE en proposant d'étudier un système 
-mécanique linéaire dont on connaît les paramètres. On y compare l'erreur sur chaque paramètre
-selon les mesures utilisées et le traitement qu'on leur applique (quantification virtuelle, filtrage...).
-
-% ============================
 %           Sections
 % ============================
-\section*{Problem Statement}
-State the task/problem in 2--4 sentences: what is the input, desired output, and key constraint(s).
+\section*{Étude Théorique}
+Le système mécanique étudié est constitué de trois masses et comporte
+neuf paramètres matériels à identifier :
+les raideurs $k_0$, $k_1$, $k_2$, les coefficients d'amortissement
+$b_0$, $b_1$, $b_2$, et les masses $m_1$, $m_2$, $m_3$.
+Chaque masse peut être isolée pour obtenir une équation dynamique (application du PFD). 
+Ces équations sont indépendantes (découplées) et linéaires du point de vu des paramètres : 
+il nous faut donc un minimum de 9 équations indépendantes pour identifier chacun des 
+paramètres matériels du modèle dynamique directe du système.
 
-\section*{Method and Implementation}
-Briefly describe your approach/algorithm or technique. Mention the idea and why it fits the problem. \\
+Pour simplifier l'étude, on construit les 3 fonctions de transferts reliant l'effort 
+appliqué en entrée à chaque position $\alpha$, $\beta$, $\gamma$ à partir des transformations 
+de Laplace de chacune des 3 équations.
 
-Languages/tools used, key implementation details, special libraries or parameters, and any assumptions.
+\section*{Manipulations}
+\noindent\textbf{Simulation du système.} Le système est simulé sous MATLAB à partir de ces fonctions de transfert.
+On applique une force en entrée sous la forme d'un échelon unitaire,
+ce qui permet d'obtenir une mesure des positions $\alpha$, $\beta$ et $\gamma$,
+ainsi que leurs vitesses et accélérations.\\
+
+Lorsque l'on regroupe nos mesures, on aboutit à l'équation matricielle suivante :
+\begin{equation}
+  \begin{array}{ccl}
+    Y = Ap
+  \end{array}
+\end{equation}
+où $p$ est le vecteur des neufs paramètres matériels, $A$ la matrice de régression concaténée, 
+et $Y$ la matrice des sorties measurées concaténées.
 
 % ============================
 %     Main Results Figure
@@ -63,25 +75,74 @@ Languages/tools used, key implementation details, special libraries or parameter
 % Use figure* to span both columns. Replace results.pdf with your image file.
 \begin{figure}[!h]
   \centering
-  \includegraphics[width=0.45\textwidth]{fig_parameters.png}
-  \caption{One figure that summarizes the main result. Make the caption self-contained:
-  what the figure shows, how to read it, and the key takeaway in one sentence.}
+  \includegraphics[width=0.30\textwidth]{step_parameters.png}
+  \caption{Réponse de chacun des paramètres à un échelon unitaire de force.}
   \label{fig:summary}
 \end{figure}
 
-\section*{Results}
-Very briefly describe what Figure~\ref{fig:summary} shows (numbers or qualitative outcomes). 
-Highlight success criteria (e.g., accuracy, runtime, error) and whether they were met.
+Les données obtenues sont donc utilisées pour construire la matrice $A$.
 
+\noindent\textbf{Identification des paramètres.} La résolution de l'équation $(1)$ sous MATLAB conduit à l'identification des paramètres.
+Le choix des mesures utilisées est important : si les mesures sont trop
+similaires, les lignes de $A$ deviennent proches et le problème est mal
+conditionné. Il est donc nécessaire de disposer de mesures suffisamment
+riches afin d'obtenir une identification fiable.
+
+Ainsi, le calcul du conditionnement et du rang de $A$ permettent
+d'évaluer la qualité du problème d'identification.
+
+% ============================
+% Quantification et filtrage
+% ============================
+\noindent\textbf{Quantification et filtrage.} Les positions, vitesses et accélérations simulées sont ensuite quantifiées
+avec les résolutions imposées dans le TP. Cette opération introduit une
+erreur sur les mesures, qui se répercute directement sur l'identification.
+
+Un filtrage des données quantifiées est également étudié. Nous avons
+constaté que le filtrage ne conduit pas nécessairement à une meilleure
+identification : en supprimant certaines composantes du signal, il peut
+également supprimer des informations utiles à l'estimation des paramètres.
+Le choix du paramètre du filtre doit donc être réalisé en comparant les
+erreurs d'identification.
+
+% ============================
+% Etude complémentaire
+% ============================
+\noindent\textbf{Étude complémentaire.} Lorsque $k_1$ et $b_1$ deviennent très grands, les deux premières masses
+sont fortement couplées. On obtient alors approximativement
+\[
+\alpha\simeq\beta,\qquad
+\dot{\alpha}\simeq\dot{\beta},\qquad
+\ddot{\alpha}\simeq\ddot{\beta}.
+\]
+
+Les paramètres $k_1$ et $b_1$ ne peuvent alors plus être correctement
+identifiés. Le modèle est donc réduit afin de ne conserver que les
+paramètres identifiables :
+\[
+p_r =
+[k_0,\ k_2,\ b_0,\ b_2,\ m_1+m_2,\ m_3]^T.
+\]
+
+Pour ce modèle réduit, nous obtenons $\mathrm{cond}(A)=98$.
+Les erreurs obtenues sont notamment de $0.12\%$ pour $k_0$,
+$1.22\%$ pour $b_0$, $4.30\%$ pour $b_2$ et $4.84\%$ pour $m_3$.
+L'erreur sur $m_1+m_2$ reste cependant plus importante, avec $33.35\%$.
+
+% ============================
+% Conclusion
+% ============================
 \section*{Conclusion}
-One or two sentences to conclude. Then list 2--3 bullets on what you learned:
-\begin{itemize}
-  \item Key technical insight learned.
-  \item A practical/implementation tip you discovered.
-  \item (Optional) A limitation or next step you would try.
-\end{itemize}
 
-% Balance last page columns and end.
+Ce TP nous a permis de comprendre les fondamentaux de l'identification
+paramétrique à partir de mesures simulées. Nous avons appris à construire
+une matrice de régression, à analyser son conditionnement et à étudier
+l'influence de la quantification et du filtrage sur les résultats obtenus.
+
+L'étude complémentaire montre également qu'un paramètre peut devenir
+non identifiable lorsque les mesures ne contiennent plus suffisamment
+d'information pour le distinguer. Il est alors nécessaire d'adapter le
+modèle d'identification aux paramètres réellement observables.
+
 \balance
-
 \end{document}
