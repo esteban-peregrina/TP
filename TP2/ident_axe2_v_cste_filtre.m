@@ -22,6 +22,7 @@ for k=1:length(i2)
     Y(k,:) = [cos(q2(k)) sign(qpfil2(k)) qpfil2(k) 1];
     u(k,:) = N2*kc2*ifil2(k);
 end
+cond(Y)
 %% Calcul des paramètres
 p=Y\u;
 
