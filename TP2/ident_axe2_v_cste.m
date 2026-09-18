@@ -22,7 +22,10 @@ for k=1:length(i2)
     Y(k,:) = [cos(q2(k)) sign(qp2(k)) qp2(k) 1];
     u(k,:) = N2*kc2*i2(k);
 end
+disp('Conditionnement :');
 cond(Y)
+disp("Amplification de l'erreur :");
+1./min(svd(Y))
 %% Calcul des paramètres
 p=Y\u;
 
