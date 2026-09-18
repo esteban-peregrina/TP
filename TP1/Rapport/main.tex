@@ -31,44 +31,43 @@
 % ============================
 \title{\vspace{-6mm}\textbf{TP1: Identification d’un Système Mécanique
 Linéaire}}
-\author{Léo Sabatié, Esteban Peregrina\quad (Groupe 2, ROB5) \\ Instructor: Mahdi Khoramshahi \quad School: Polytech Sorbonne}
+\author{Léo Sabatié, Esteban Peregrina \quad (Groupe 2, ROB5) \\ Enseignant: Mahdi Khoramshahi \quad École: Polytech Sorbonne}
 \date{\today}
 
 \begin{document}
 \maketitle
 
 % ============================
-%         One-sentence intro
-% ============================
-% Keep this to 2–3 lines max; no abstract section to stay minimal.
-\noindent\textbf{Context.} Ce premier TP d'identification paramétrique 
-nous introduit aux concepts fondamentaux de cette UE en proposant d'étudier un système 
-mécanique linéaire dont on connaît les paramètres. On y compare l'erreur sur chaque paramètre
-selon les mesures utilisées et le traitement qu'on leur applique (quantification virtuelle, filtrage...).
-
-% ============================
 %           Sections
 % ============================
-\section*{Etude Théorique}
+\section*{Étude Théorique}
 Le système mécanique étudié est constitué de trois masses et comporte
-neuf paramètres à identifier :
+neuf paramètres matériels à identifier :
 les raideurs $k_0$, $k_1$, $k_2$, les coefficients d'amortissement
-$b_0$, $b_1$, $b_2$ et les masses $m_1$, $m_2$, $m_3$.
-Pour une mesure, les trois équations dynamiques fournissent trois
-équations linéaires. Il faut donc au minimum trois mesures indépendantes
-pour obtenir neuf équations et pouvoir identifier les neuf paramètres.
+$b_0$, $b_1$, $b_2$, et les masses $m_1$, $m_2$, $m_3$.
+Chaque masse peut être isolée pour obtenir une équation dynamique (application du PFD). 
+Ces équations sont indépendantes (découplées) et linéaires du point de vu des paramètres : 
+il nous faut donc un minimum de 9 équations indépendantes pour identifier chacun des 
+paramètres matériels du modèle dynamique directe du système.
 
-Le problème peut alors s'écrire sous la forme
-\[
-A p = Y,
-\]
-où $p$ est le vecteur des neuf paramètres recherchés.
+Pour simplifier l'étude, on construit les 3 fonctions de transferts reliant l'effort 
+appliqué en entrée à chaque position $\alpha$, $\beta$, $\gamma$ à partir des transformations 
+de Laplace de chacune des 3 équations.
 
-\section*{Simulation du système}
-Le système est simulé sous MATLAB à partir de ses fonctions de transfert.
-Une force en échelon unitaire est appliquée et permet d'obtenir les
-positions $\alpha$, $\beta$ et $\gamma$, ainsi que leurs vitesses et
-accélérations.\\
+\section*{Manipulations}
+\noindent\textbf{Simulation du système.} Le système est simulé sous MATLAB à partir de ces fonctions de transfert.
+On applique une force en entrée sous la forme d'un échelon unitaire,
+ce qui permet d'obtenir une mesure des positions $\alpha$, $\beta$ et $\gamma$,
+ainsi que leurs vitesses et accélérations.\\
+
+Lorsque l'on regroupe nos mesures, on aboutit à l'équation matricielle suivante :
+\begin{equation}
+  \begin{array}{ccl}
+    Y = Ap
+  \end{array}
+\end{equation}
+où $p$ est le vecteur des neufs paramètres matériels, $A$ la matrice de régression concaténée, 
+et $Y$ la matrice des sorties measurées concaténées.
 
 % ============================
 %     Main Results Figure
@@ -76,30 +75,26 @@ accélérations.\\
 % Use figure* to span both columns. Replace results.pdf with your image file.
 \begin{figure}[!h]
   \centering
-  \includegraphics[width=0.30\textwidth]{fig_parameters.png}
-  \caption{Réponse du système à un échelon unitaire de force.}
+  \includegraphics[width=0.30\textwidth]{step_parameters.png}
+  \caption{Réponse de chacun des paramètres à un échelon unitaire de force.}
   \label{fig:summary}
 \end{figure}
 
-Les données obtenues constituent ensuite les mesures utilisées pour
-construire la matrice d'identification $A$.
+Les données obtenues sont donc utilisées pour construire la matrice $A$.
 
-\section*{Identification des paramètres}
-L'identification est réalisée en résolvant le système $Ap=Y$ sous MATLAB.
+\noindent\textbf{Identification des paramètres.} La résolution de l'équation $(1)$ sous MATLAB conduit à l'identification des paramètres.
 Le choix des mesures utilisées est important : si les mesures sont trop
 similaires, les lignes de $A$ deviennent proches et le problème est mal
 conditionné. Il est donc nécessaire de disposer de mesures suffisamment
-informatives afin d'obtenir une identification fiable.
+riches afin d'obtenir une identification fiable.
 
-Le nombre de conditionnement de $A$, ainsi que son rang, permettent
-notamment d'évaluer la qualité du problème d'identification.
+Ainsi, le calcul du conditionnement et du rang de $A$ permettent
+d'évaluer la qualité du problème d'identification.
 
 % ============================
 % Quantification et filtrage
 % ============================
-\section*{Quantification et filtrage}
-
-Les positions, vitesses et accélérations simulées sont ensuite quantifiées
+\noindent\textbf{Quantification et filtrage.} Les positions, vitesses et accélérations simulées sont ensuite quantifiées
 avec les résolutions imposées dans le TP. Cette opération introduit une
 erreur sur les mesures, qui se répercute directement sur l'identification.
 
@@ -113,9 +108,7 @@ erreurs d'identification.
 % ============================
 % Etude complémentaire
 % ============================
-\section*{Étude complémentaire}
-
-Lorsque $k_1$ et $b_1$ deviennent très grands, les deux premières masses
+\noindent\textbf{Étude complémentaire.} Lorsque $k_1$ et $b_1$ deviennent très grands, les deux premières masses
 sont fortement couplées. On obtient alors approximativement
 \[
 \alpha\simeq\beta,\qquad
@@ -141,10 +134,10 @@ L'erreur sur $m_1+m_2$ reste cependant plus importante, avec $33.35\%$.
 % ============================
 \section*{Conclusion}
 
-Ce TP nous a permis de comprendre le principe de l'identification
+Ce TP nous a permis de comprendre les fondamentaux de l'identification
 paramétrique à partir de mesures simulées. Nous avons appris à construire
-une matrice d'identification, à analyser son conditionnement et à étudier
-l'influence de la quantification et du filtrage sur les résultats.
+une matrice de régression, à analyser son conditionnement et à étudier
+l'influence de la quantification et du filtrage sur les résultats obtenus.
 
 L'étude complémentaire montre également qu'un paramètre peut devenir
 non identifiable lorsque les mesures ne contiennent plus suffisamment
