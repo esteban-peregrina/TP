@@ -100,23 +100,21 @@ legend('\Gamma_2 mesuré','\Gamma_2 filtré','inertie','gravité','centrifuge','fro
 title('Résultats axe 2 ; identification à partir de données filtrées');
 
 error1 = N1*kc1*i1 - ctotal(1:2:length(ctotal));
-error1 ./ (N1*kc1*i1);
 figure(3)
 clf
 hold on
 grid on
-h=plot(t,error1 * 100, 'r');
+h=plot(t,error1, 'r');
 set(h,'LineWidth',1.5);
 legend('Erreur relative axe 1');
 title('Résultats axe 1 ; identification à partir de données filtrées');
 
 error2 = N2*kc2*i2 - ctotal(2:2:length(ctotal));
-error2 ./ (N2*kc2*i2);
 figure(4)
 clf
 hold on
 grid on
-h=plot(t, error2 * 100,'r');
+h=plot(t, error2,'r');
 set(h,'LineWidth',1.5);
 legend('Erreur relative axe 2');
 title('Résultats axe 2 ; identification à partir de données filtrées');
