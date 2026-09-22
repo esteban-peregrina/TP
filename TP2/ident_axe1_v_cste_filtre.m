@@ -63,7 +63,7 @@ plot([min(u) max(u)],[min(u) max(u)],'--g','LineWidth',2)
 grid on
 xlabel('$y$','Interpreter','latex','FontSize',16)
 ylabel('$\hat{y}$','Interpreter','latex','FontSize',16)
-xlim([-0.25 0.25])
-ylim([-0.25 0.25])
+xlim([-0.2 1.1])
+ylim([-0.2 1.1])
 axis equal
 axis square
