@@ -40,25 +40,42 @@ Linéaire}}
 % ============================
 %           Sections
 % ============================
-\section*{Étude Théorique}
-Le système mécanique étudié est constitué de trois masses et comporte
-neuf paramètres matériels à identifier :
-les raideurs $k_0$, $k_1$, $k_2$, les coefficients d'amortissement
-$b_0$, $b_1$, $b_2$, et les masses $m_1$, $m_2$, $m_3$.
-Chaque masse peut être isolée pour obtenir une équation dynamique (application du PFD). 
-Ces équations sont indépendantes (découplées) et linéaires du point de vu des paramètres : 
-il nous faut donc un minimum de 9 équations indépendantes pour identifier chacun des 
-paramètres matériels du modèle dynamique directe du système.
+\section{Étude Théorique}
+\subsection{Modèle dynamique avec un paramètrage relatif habituel}
+???
 
-Pour simplifier l'étude, on construit les 3 fonctions de transferts reliant l'effort 
-appliqué en entrée à chaque position $\alpha$, $\beta$, $\gamma$ à partir des transformations 
-de Laplace de chacune des 3 équations.
+\subsection{Réécriture avec un paramétrage absolu}
 
-\section*{Manipulations}
-\noindent\textbf{Simulation du système.} Le système est simulé sous MATLAB à partir de ces fonctions de transfert.
-On applique une force en entrée sous la forme d'un échelon unitaire,
-ce qui permet d'obtenir une mesure des positions $\alpha$, $\beta$ et $\gamma$,
-ainsi que leurs vitesses et accélérations.\\
+
+\subsection{Intégration de la dynamique des actionneurs}
+
+
+\subsection{Identification des frottements et des termes de gravité}
+
+
+\subsection{Identification des autres termes du modèle dynamique}
+
+\section{Manipulations}
+\subsection{Identification des frottements et de la gravité sur l'axe 2}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.30\textwidth]{Comparaison_valeurs_mesurées_estimées.png}
+  \caption{Comparaison entre les valeurs mesurées et les valeurs estimées par le modèle avec les données brutes ($i_2$ et $q_p$)}
+  \label{fig:summary}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=0.30\textwidth]{Comparaison_valeurs_mesurées_estimées_filtre.png}
+  \caption{Comparaison entre les valeurs mesurées et les valeurs estimées par le modèle avec les données filtrées ($i_{2,fil}$ et $q_{p,fil}$).}
+  \label{fig:summary}
+\end{figure}
+
+Lorsque nous utilisons les données brutes pour estimer les paramètres, on peut observer une plus grande dispertion des points autour de la diagonale
+Cette dispersion traduit des écarts plus importants entre les valeurs mesurées et les valeurs estimées par le modèle, notamment en raison du bruit présent dans les mesures. Après filtrage des données, les points se rapprochent davantage de la droite (y=\hat{y}), ce qui indique une diminution des écarts entre les mesures et les estimations et donc une meilleure concordance avec le modèle identifié.
+
+
 
 Lorsque l'on regroupe nos mesures, on aboutit à l'équation matricielle suivante :
 \begin{equation}
@@ -69,19 +86,11 @@ Lorsque l'on regroupe nos mesures, on aboutit à l'équation matricielle suivant
 où $p$ est le vecteur des neufs paramètres matériels, $A$ la matrice de régression concaténée, 
 et $Y$ la matrice des sorties measurées concaténées.
 
-% ============================
-%     Main Results Figure
-% ============================
-% Use figure* to span both columns. Replace results.pdf with your image file.
-\begin{figure}[!h]
-  \centering
-  \includegraphics[width=0.30\textwidth]{step_parameters.png}
-  \caption{Réponse de chacun des paramètres à un échelon unitaire de force.}
-  \label{fig:summary}
-\end{figure}
+
 
 Les données obtenues sont donc utilisées pour construire la matrice $A$.
 
+\subsection{Identification des frootements et de la gravité sur l'axe 1}
 \noindent\textbf{Identification des paramètres.} La résolution de l'équation $(1)$ sous MATLAB conduit à l'identification des paramètres.
 Le choix des mesures utilisées est important : si les mesures sont trop
 similaires, les lignes de $A$ deviennent proches et le problème est mal
@@ -94,6 +103,7 @@ d'évaluer la qualité du problème d'identification.
 % ============================
 % Quantification et filtrage
 % ============================
+\subsection{Identification des autres termes du modèle dynamique}
 \noindent\textbf{Quantification et filtrage.} Les positions, vitesses et accélérations simulées sont ensuite quantifiées
 avec les résolutions imposées dans le TP. Cette opération introduit une
 erreur sur les mesures, qui se répercute directement sur l'identification.
@@ -133,16 +143,7 @@ L'erreur sur $m_1+m_2$ reste cependant plus importante, avec $33.35\%$.
 % Conclusion
 % ============================
 \section*{Conclusion}
-
-Ce TP nous a permis de comprendre les fondamentaux de l'identification
-paramétrique à partir de mesures simulées. Nous avons appris à construire
-une matrice de régression, à analyser son conditionnement et à étudier
-l'influence de la quantification et du filtrage sur les résultats obtenus.
-
-L'étude complémentaire montre également qu'un paramètre peut devenir
-non identifiable lorsque les mesures ne contiennent plus suffisamment
-d'information pour le distinguer. Il est alors nécessaire d'adapter le
-modèle d'identification aux paramètres réellement observables.
+???
 
 \balance
 \end{document}
