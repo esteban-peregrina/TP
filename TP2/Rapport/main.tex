@@ -8,6 +8,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{microtype}
+\usepackage{amsmath}
 
 % ---- Layout ----
 \usepackage{geometry}
@@ -41,10 +42,235 @@ Linéaire}}
 %           Sections
 % ============================
 \section{Étude Théorique}
-\subsection{Modèle dynamique avec un paramètrage relatif habituel}
-???
+```latex
+\subsection{Modèle dynamique avec un paramétrage relatif}
+
+La méthode de Newton--Euler permet d'écrire le modèle dynamique du robot sous la forme suivante :
+\begin{equation}
+\begin{aligned}
+\begin{pmatrix}
+\Gamma_1\\
+\Gamma_2
+\end{pmatrix}
+&=
+\underbrace{
+\begin{pmatrix}
+I'_1 + I'_2 + m_2l_1^2 + 2h\cos(\theta_2)
+&
+I'_2 + h\cos(\theta_2)
+\\
+I'_2 + h\cos(\theta_2)
+&
+I'_2
+\end{pmatrix}
+}_{A(\mathbf{q})}
+\begin{pmatrix}
+\ddot{\theta}_1\\
+\ddot{\theta}_2
+\end{pmatrix}
+\\[0.5em]
+&\quad+
+\underbrace{
+\begin{pmatrix}
+-2h\sin(\theta_2)\\
+0
+\end{pmatrix}
+}_{B(\mathbf{q})}
+\dot{\theta}_1\dot{\theta}_2
+\\[0.5em]
+&\quad+
+\underbrace{
+\begin{pmatrix}
+0 & -h\sin(\theta_2)\\
+h\sin(\theta_2) & 0
+\end{pmatrix}
+}_{C(\mathbf{q})}
+\begin{pmatrix}
+\dot{\theta}_1\\
+\dot{\theta}_2
+\end{pmatrix}
+\\[0.5em]
+&\quad+
+g\,
+\underbrace{
+\begin{pmatrix}
+m_2\lambda_2\cos(\theta_1+\theta_2)
++m_1\lambda_1\cos(\theta_1)
+\\
+m_2\lambda_2\cos(\theta_1+\theta_2)
+\end{pmatrix}
+}_{\mathbf{g}(\mathbf{q})}.
+\end{aligned}
+\label{eq:modele_relatif}
+\end{equation}
+
+Les paramètres regroupés dans ce modèle sont définis par :
+\begin{equation}
+\begin{aligned}
+I'_1 &= I_1 + m_1\lambda_1^2,\\
+I'_2 &= I_2 + m_2\lambda_2^2,\\
+h &= m_2\lambda_2l_1.
+\end{aligned}
+\label{eq:parametres_relatifs}
+\end{equation}
+
 
 \subsection{Réécriture avec un paramétrage absolu}
+
+Jusqu'à présent, le modèle dynamique a été exprimé à l'aide d'un paramétrage relatif des articulations. Dans la suite, nous adoptons un paramétrage absolu, dans lequel $\theta'_1$ et $\theta'_2$ représentent directement les orientations absolues des deux bras.
+
+Ce changement de coordonnées nécessite de transformer à la fois les variables articulaires et les couples associés.
+
+La relation entre les coordonnées relatives $\mathbf{q}$ et les coordonnées absolues $\mathbf{q'}$ s'écrit :
+\begin{equation}
+\begin{pmatrix}
+\theta'_1\\
+\theta'_2
+\end{pmatrix}
+=
+\underbrace{
+\begin{pmatrix}
+1 & 0\\
+1 & 1
+\end{pmatrix}
+}_{E}
+\begin{pmatrix}
+\theta_1\\
+\theta_2
+\end{pmatrix}.
+\label{eq:transformation_q}
+\end{equation}
+
+On en déduit les relations inverses :
+\begin{equation}
+\begin{pmatrix}
+\theta_1\\
+\theta_2
+\end{pmatrix}
+=
+E^{-1}
+\begin{pmatrix}
+\theta'_1\\
+\theta'_2
+\end{pmatrix},
+\qquad
+E^{-1}
+=
+\begin{pmatrix}
+1 & 0\\
+-1 & 1
+\end{pmatrix}.
+\label{eq:transformation_q_inverse}
+\end{equation}
+
+Les couples généralisés doivent également être transformés. La relation entre les couples relatifs et absolus est donnée par :
+\begin{equation}
+\begin{pmatrix}
+\Gamma'_1\\
+\Gamma'_2
+\end{pmatrix}
+=
+E^{-T}
+\begin{pmatrix}
+\Gamma_1\\
+\Gamma_2
+\end{pmatrix},
+\end{equation}
+avec
+\begin{equation}
+E^{-T}
+=
+\begin{pmatrix}
+1 & -1\\
+0 & 1
+\end{pmatrix}.
+\label{eq:transformation_gamma}
+\end{equation}
+
+En appliquant ces transformations au modèle dynamique \eqref{eq:modele_relatif}, on obtient :
+\begin{equation}
+\begin{aligned}
+\boldsymbol{\Gamma}'
+&=
+E^{-T}A(\mathbf{q})E^{-1}\ddot{\mathbf{q}}'
++
+E^{-T}B(\mathbf{q})
+\left(\dot{\theta}'_1{}^2
++\dot{\theta}'_1\dot{\theta}'_2\right)
+\\
+&\quad+
+E^{-T}C(\mathbf{q})E^{-1}\dot{\mathbf{q}}'
++
+E^{-T}\mathbf{g}(\mathbf{q}).
+\end{aligned}
+\label{eq:transformation_modele}
+\end{equation}
+
+Après développement et regroupement des différents termes, le modèle dynamique exprimé dans les coordonnées absolues prend finalement la forme :
+\begin{equation}
+\begin{aligned}
+\begin{pmatrix}
+\Gamma'_1\\
+\Gamma'_2
+\end{pmatrix}
+&=
+\underbrace{
+\begin{pmatrix}
+I'_1 + m_2l_1^2
+&
+h\cos(\theta'_2-\theta'_1)
+\\
+h\cos(\theta'_2-\theta'_1)
+&
+I'_2
+\end{pmatrix}
+}_{A'(\mathbf{q}')}
+\begin{pmatrix}
+\ddot{\theta}'_1\\
+\ddot{\theta}'_2
+\end{pmatrix}
+\\[0.5em]
+&\quad+
+\underbrace{
+\begin{pmatrix}
+0\\
+0
+\end{pmatrix}
+}_{B'(\mathbf{q}')}
+\dot{\theta}'_1\dot{\theta}'_2
+\\[0.5em]
+&\quad+
+\underbrace{
+\begin{pmatrix}
+0 & -h\sin(\theta'_2-\theta'_1)
+\\
+h\sin(\theta'_2-\theta'_1) & 0
+\end{pmatrix}
+}_{C'(\mathbf{q}')}
+\begin{pmatrix}
+\dot{\theta}'_1\\
+\dot{\theta}'_2
+\end{pmatrix}
+\\[0.5em]
+&\quad+
+g\,
+\underbrace{
+\begin{pmatrix}
+(m_2l_1+m_1\lambda_1)\cos(\theta'_1)
+\\
+m_2\lambda_2\cos(\theta'_2)
+\end{pmatrix}
+}_{\mathbf{g}'(\mathbf{q}')}.
+\end{aligned}
+\label{eq:modele_absolu}
+\end{equation}
+
+On remarque notamment que, dans le paramétrage absolu, le terme
+\[
+B'(\mathbf{q}')\dot{\theta}'_1\dot{\theta}'_2
+\]
+est nul. Les termes dépendant des vitesses sont alors regroupés dans la matrice $C'(\mathbf{q}')$.
+```
 
 
 \subsection{Intégration de la dynamique des actionneurs}
