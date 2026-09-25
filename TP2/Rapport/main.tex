@@ -427,5 +427,11 @@ Les résultats obtenus sont :
 \end{itemize}
 
 Afin de valider ces paramètres, nous avons reconstruit le couple total simulé par notre modèle dynamique complet pour le comparer aux couples réels mesurés sur les moteurs. Les erreurs relatives observées sur les deux axes restent faibles et centrées sur zéro, ce qui valide expérimentalement notre démarche d'identification séquentielle (termes statiques puis dynamiques) et la pertinence du modèle adopté.
+% ============================
+% Conclusion
+% ============================
+\section*{Conclusion}
+Ce TP nous a permis de mettre en œuvre une démarche complète d'identification dynamique d'un robot manipulateur. En passant d'un paramétrage relatif classique à un paramétrage absolu justifié par l'architecture mécanique du robot, nous avons pu simplifier l'expression du modèle dynamique et mettre en évidence ses propriétés de linéarité par rapport à un jeu de paramètres de base.
 
+L'approche expérimentale a souligné l'importance de décomposer le problème : l'identification séparée des termes statiques (gravité et frottements à vitesse constante) permet de fiabiliser l'identification des termes d'inertie dans un second temps. Enfin, nous avons pu constater l'impact crucial du filtrage des données issues des capteurs, la dérivation numérique des signaux bruités pouvant fortement dégrader la qualité de la matrice d'observation et, *in fine*, la robustesse de l'identification au sens des moindres carrés.
 \end{document}
