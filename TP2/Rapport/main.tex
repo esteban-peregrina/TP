@@ -1,7 +1,7 @@
 % ============================
 % TP Report – Simple Two-Column Template
 % ============================
-\documentclass[10pt,a4paper,twocolumn]{article}
+\documentclass[10pt,a4paper]{article}
 
 % ---- Encoding & typography (simple, portable) ----
 \usepackage[utf8]{inputenc}
@@ -17,7 +17,6 @@
   top=1.5cm, bottom=1.5cm,
   columnsep=0.55cm
 }
-\usepackage{balance} % balances the final page columns
 
 % ---- Graphics ----
 \usepackage{graphicx}
@@ -269,119 +268,164 @@ et l'inertie correspond à celle d'un axe simple, la symétrie annulant les prod
 d'inertie.
 
 \subsection{Intégration de la dynamique des actionneurs}
-L'intégration de la dynamique des actionneurs se fait en remplaçant le membre de gauche de
-\eqref{eq:modele_relatif} par le modèle fourni. Il faut développer l'équation matricielle puis rassembler
-les termes $\ddot\theta$ dans la matrice d'inertie.
+L'intégration de la dynamique des actionneurs se fait en utilisant le modèle proposé pour l'actionnement, à savoir que les frottements n'interviennent que dans les réducteurs. Le modèle s'écrit alors :
+\begin{equation}
+\begin{cases}
+  \Gamma_1 = N_1 K_{c1} i_1 - I_{a1}\ddot{\theta}_1 - \Gamma_{f1} \\
+  \Gamma_2 = N_2 K_{c2} i_2 - I_{a2}\ddot{\theta}_2 - \Gamma_{f2}
+\end{cases}
+\label{eq:modele_actionneurs}
+\end{equation}
+
+En remplaçant le membre de gauche de l'équation \eqref{eq:modele_absolu} par ce modèle d'actionnement, on obtient l'expression liant les commandes électriques aux grandeurs dynamiques. Après avoir passé les termes d'inertie des actionneurs ($I_{a1}\ddot{\theta}_1$ et $I_{a2}\ddot{\theta}_2$) du côté droit de l'équation pour les regrouper avec la matrice d'inertie $A'(\mathbf{q}')$, on aboutit au modèle complet :
+\begin{equation}
+  \begin{aligned}
+    \begin{pmatrix}
+      N_1 K_{c1} i_1 \\
+      N_2 K_{c2} i_2
+    \end{pmatrix}
+    &=
+    \begin{pmatrix}
+      I'_1 + m_2l_1^2 + I_{a1} & h\cos(\theta'_2-\theta'_1) \\
+      h\cos(\theta'_2-\theta'_1) & I'_2 + I_{a2}
+    \end{pmatrix}
+    \begin{pmatrix}
+      \ddot{\theta}'_1 \\
+      \ddot{\theta}'_2
+    \end{pmatrix}
+    \\[0.5em]
+    &\quad+
+    \begin{pmatrix}
+      0 \\
+      0
+    \end{pmatrix}
+    \dot{\theta}'_1\dot{\theta}'_2
+    \\[0.5em]
+    &\quad+
+    \begin{pmatrix}
+      0 & -h\sin(\theta'_2-\theta'_1) \\
+      h\sin(\theta'_2-\theta'_1) & 0
+    \end{pmatrix}
+    \begin{pmatrix}
+      \dot{\theta}'_1{}^2\\
+      \dot{\theta}'_2{}^2
+    \end{pmatrix}
+    \\[0.5em]
+    &\quad+
+    g\,
+    \begin{pmatrix}
+      (m_2l_1+m_1\lambda_1)\cos(\theta'_1) \\
+      m_2\lambda_2\cos(\theta'_2)
+    \end{pmatrix}
+    +
+    \begin{pmatrix}
+      \Gamma_{f1} \\
+      \Gamma_{f2}
+    \end{pmatrix}.
+  \end{aligned}
+\label{eq:modele_complet_actionneurs}
+\end{equation}
 
 \subsection{Identification des frottements et des termes de gravité}
-Afin d'identifier les paramètres de frottement et de gravité du système, on simplifie le modèle 
-en faisant l'hypothèse que l'axe 1 est immobile et que l'axe 2 se déplace à vitesse constante.
-Ainsi, on peut aboutir la relation linéaire suivante entre le couple du second reducteur  $\Gamma_1$ 
-et nos paramètres $p$ : 
+Afin d'identifier les paramètres de frottement et de gravité du système, on simplifie le modèle en faisant l'hypothèse que l'axe 1 est immobile ($\dot{\theta}'_1 = \ddot{\theta}'_1 = 0$) et que l'axe 2 se déplace à vitesse constante ($\ddot{\theta}'_2 = 0$).
 
-Afin de résoudre l'équation sur MATLAB, il faudra réaliser un minimum de $n_p = 4$ mesures de $Y$ notées 
-$Y_k$ pour $k \in \{1,2,3,4\}$ et qu'on concatenera dans une matrice carré (donc inversible). Le terme
-de gauche sera construit par concaténation des entrées ayant produites les mesures (seul le courant $i_2$ 
-varie). Davantage de mesures permettent d'obtenir un système surdéterminé pour affiner les résultats.
+Dans ces conditions, la deuxième ligne de l'équation \eqref{eq:modele_complet_actionneurs} se réduit à :
+\begin{equation}
+  N_2 K_{c2} i_2 = g m_2 \lambda_2 \cos(\theta'_2) + \Gamma_{f2}
+\label{eq:equilibre_axe2}
+\end{equation}
 
-Pour l'axe 1, on supposera que l'axe 1 se déplace à vitesse constante, et on prendra $\theta_1', \theta_2'$
-tel que, à tout instant, $cos(\theta_2' - \theta_1') = 0$. On procède ensuite de la même 
-façon qu'avec l'axe 2.
+En utilisant le modèle de frottement proposé $\Gamma_{f2} = a_2 \text{sgn}(\dot{\theta}'_2) + b_2 \dot{\theta}'_2 + c_2$ et en posant $\alpha_2 = g m_2 \lambda_2$, on obtient une relation linéaire liant le couple moteur aux paramètres à identifier :
+\begin{equation}
+  N_2 K_{c2} i_2 = \alpha_2 \cos(\theta'_2) + a_2 \text{sgn}(\dot{\theta}'_2) + b_2 \dot{\theta}'_2 + c_2
+\label{eq:modele_lineaire_axe2}
+\end{equation}
 
+Ce qui s'écrit sous forme matricielle pour un échantillon de mesure :
+\begin{equation}
+  N_2 K_{c2} i_2 = 
+  \underbrace{\begin{pmatrix}
+    \cos(\theta'_2) & \text{sgn}(\dot{\theta}'_2) & \dot{\theta}'_2 & 1
+  \end{pmatrix}}_{Y(\theta'_2, \dot{\theta}'_2)}
+  \underbrace{\begin{pmatrix}
+    \alpha_2 \\ a_2 \\ b_2 \\ c_2
+  \end{pmatrix}}_{p_2}
+\end{equation}
+
+Afin de résoudre l'équation sur MATLAB, on concatène les $N$ mesures réalisées lors des phases à vitesse constante pour former un système d'équations $u = Y p$. On peut alors identifier le vecteur de paramètres $p$ au sens des moindres carrés via la commande $p = Y \backslash u$.
+
+Pour l'axe 1, on effectue une démarche similaire : on impose un mouvement à l'axe 1 à vitesse constante ($\ddot{\theta}'_1 = 0$) en maintenant une configuration telle que l'axe 2 suive l'axe 1 ($\dot{\theta}'_2 = \dot{\theta}'_1$) avec un décalage de $-\pi$ ($\theta'_2 - \theta'_1 = -\pi$). Dans ce cas, les termes d'inertie et centrifuges s'annulent. En posant $\alpha_1 = g(m_2 l_1 + m_1 \lambda_1)$, on obtient un modèle linéaire analogue pour l'axe 1 permettant d'identifier ses paramètres de gravité et de frottement.
 
 \subsection{Identification des autres termes du modèle dynamique}
-En développant l'équation (5) et en rassemblant les paramètres dynamique restant, on aboutit à l'équation
-suivante :  
+Les paramètres de gravité et de frottement étant identifiés, on peut isoler les termes inertiels et centrifuges (dépendant des accélérations et des vitesses au carré) en passant les termes de gravité et de frottement à gauche de l'égalité dans l'équation \eqref{eq:modele_complet_actionneurs}. 
+
+On peut alors réorganiser le système pour isoler les 3 paramètres d'inertie restants sous forme matricielle :
+\begin{equation}
+  \begin{pmatrix}
+    N_1 K_{c1} i_1 - \Gamma_{g1} - \Gamma_{f1} \\
+    N_2 K_{c2} i_2 - \Gamma_{g2} - \Gamma_{f2}
+  \end{pmatrix}
+  =
+  Z(\mathbf{q}', \dot{\mathbf{q}}', \ddot{\mathbf{q}}')
+  \begin{pmatrix}
+    I'_1 + m_2 l_1^2 + I_{a1} \\
+    h \\
+    I'_2 + I_{a2}
+  \end{pmatrix}
+\label{eq:modele_lineaire_inertie}
+\end{equation}
+Avec la matrice d'observation $Z$ définie par :
+\begin{equation}
+  Z = 
+  \begin{pmatrix}
+    \ddot{\theta}'_1 & \ddot{\theta}'_2\cos(\theta'_2-\theta'_1) - \dot{\theta}'_2{}^2\sin(\theta'_2-\theta'_1) & 0 \\
+    0 & \ddot{\theta}'_1\cos(\theta'_2-\theta'_1) + \dot{\theta}'_1{}^2\sin(\theta'_2-\theta'_1) & \ddot{\theta}'_2
+  \end{pmatrix}
+\end{equation}
+
+On construit ensuite la matrice $Z$ complète en concaténant l'ensemble des mesures issues des mouvements combinés (réalisés avec des trajectoires sinusoïdales riches en dynamique). La résolution par les moindres carrés permet alors d'identifier ces 3 derniers paramètres inertiels.
 
 \section{Manipulations}
 \subsection{Identification des frottements et de la gravité sur l'axe 2}
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[width=0.30\textwidth]{Comparaison_valeurs_mesurées_estimées.png}
+  \includegraphics[width=0.45\textwidth]{Comparaison_valeurs_mesurées_estimées.png} % Ajusté à 0.45 pour twocolumn
   \caption{Comparaison entre les valeurs mesurées et les valeurs estimées par le modèle avec les données brutes ($i_2$ et $q_p$)}
-  \label{fig:summary}
+  \label{fig:comparaison_brute_axe2}
 \end{figure}
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[width=0.30\textwidth]{Comparaison_valeurs_mesurées_estimées_filtre.png}
+  \includegraphics[width=0.45\textwidth]{Comparaison_valeurs_mesurées_estimées_filtre.png} % Ajusté à 0.45 pour twocolumn
   \caption{Comparaison entre les valeurs mesurées et les valeurs estimées par le modèle avec les données filtrées ($i_{2,fil}$ et $q_{p,fil}$).}
-  \label{fig:summary}
+  \label{fig:comparaison_filtree_axe2}
 \end{figure}
 
-Lorsque nous utilisons les données brutes pour estimer les paramètres, on peut observer une plus grande dispertion des points autour de la diagonale
-Cette dispersion traduit des écarts plus importants entre les valeurs mesurées et les valeurs estimées par le modèle, notamment en raison du bruit présent dans les mesures. Après filtrage des données, les points se rapprochent davantage de la droite ($y=\hat{y}$), ce qui indique une diminution des écarts entre les mesures et les estimations et donc une meilleure concordance avec le modèle identifié.
+Lorsque nous utilisons les données brutes pour estimer les paramètres, on peut observer une plus grande dispersion des points autour de la diagonale ($y=\hat{y}$). Cette dispersion traduit des écarts plus importants entre les valeurs mesurées et les valeurs estimées par le modèle, notamment en raison du bruit présent dans les mesures (dérivées numériques des codeurs). Après filtrage des données (utilisation de \texttt{qpfil2} et \texttt{ifil2}), les points se rapprochent davantage de la droite idéale, ce qui indique une diminution des écarts entre les mesures et les estimations et donc une meilleure concordance et robustesse de l'identification.
 
+L'identification sur MATLAB avec les données filtrées donne les résultats suivants pour l'axe 2 : 
+$\alpha_2 \approx 0.0829$, $a_2 \approx 0.0582$, $b_2 \approx 0.0019$ et $c_2 \approx -0.0123$.
 
+\subsection{Identification des frottements et de la gravité sur l'axe 1}
+En appliquant la même méthodologie sur l'axe 1 à partir du fichier de données \texttt{releve\_vit\_cste\_axe1.mat} et en filtrant les signaux, nous avons pu identifier les paramètres spécifiques au premier axe. 
 
-Lorsque l'on regroupe nos mesures, on aboutit à l'équation matricielle suivante :
-\begin{equation}
-  \begin{array}{ccl}
-    Y = Ap
-  \end{array}
-\end{equation}
-où $p$ est le vecteur des neufs paramètres matériels, $A$ la matrice de régression concaténée, 
-et $Y$ la matrice des sorties measurées concaténées.
+Le conditionnement de la matrice d'observation s'avère correct, garantissant la fiabilité de l'inversion par moindres carrés. L'identification donne les résultats suivants :
+$\alpha_1 \approx 0.8721$, $a_1 \approx 0.1755$, $b_1 \approx 0.0060$ et $c_1 \approx -0.0302$.
 
+On remarque logiquement que les paramètres de gravité ($\alpha_1$) et de frottement sec ($a_1$) sont nettement plus élevés que pour l'axe 2, l'axe 1 devant supporter et entraîner la masse totale de l'axe 2 en plus de la sienne, au travers d'un réducteur dont le rapport de réduction est plus important ($N_1 = 20.25$ contre $N_2 = 4.5$).
 
-
-Les données obtenues sont donc utilisées pour construire la matrice $A$.
-
-\subsection{Identification des frootements et de la gravité sur l'axe 1}
-\noindent\textbf{Identification des paramètres.} La résolution de l'équation $(1)$ sous MATLAB conduit à l'identification des paramètres.
-Le choix des mesures utilisées est important : si les mesures sont trop
-similaires, les lignes de $A$ deviennent proches et le problème est mal
-conditionné. Il est donc nécessaire de disposer de mesures suffisamment
-riches afin d'obtenir une identification fiable.
-
-Ainsi, le calcul du conditionnement et du rang de $A$ permettent
-d'évaluer la qualité du problème d'identification.
-
-% ============================
-% Quantification et filtrage
-% ============================
 \subsection{Identification des autres termes du modèle dynamique}
-\noindent\textbf{Quantification et filtrage.} Les positions, vitesses et accélérations simulées sont ensuite quantifiées
-avec les résolutions imposées dans le TP. Cette opération introduit une
-erreur sur les mesures, qui se répercute directement sur l'identification.
+Grâce aux valeurs de gravité et de frottements précédemment calculées, nous avons pu isoler les couples liés à l'inertie et aux forces centrifuges en exploitant les essais de mouvements combinés.
 
-Un filtrage des données quantifiées est également étudié. Nous avons
-constaté que le filtrage ne conduit pas nécessairement à une meilleure
-identification : en supprimant certaines composantes du signal, il peut
-également supprimer des informations utiles à l'estimation des paramètres.
-Le choix du paramètre du filtre doit donc être réalisé en comparant les
-erreurs d'identification.
+La construction de la matrice $Z$ à partir des données filtrées (\texttt{qppfil1}, \texttt{qppfil2}, etc.) a permis d'obtenir un problème bien posé pour l'identification des 3 paramètres d'inertie.
+Les résultats obtenus sont :
+\begin{itemize}
+    \item $p_1 = I'_1 + m_2 l_1^2 + I_{a1} \approx 2.479$
+    \item $p_2 = h \approx 0.231$
+    \item $p_3 = I'_2 + I_{a2} \approx 0.171$
+\end{itemize}
 
-% ============================
-% Etude complémentaire
-% ============================
-\noindent\textbf{Étude complémentaire.} Lorsque $k_1$ et $b_1$ deviennent très grands, les deux premières masses
-sont fortement couplées. On obtient alors approximativement
-\[
-\alpha\simeq\beta,\qquad
-\dot{\alpha}\simeq\dot{\beta},\qquad
-\ddot{\alpha}\simeq\ddot{\beta}.
-\]
+Afin de valider ces paramètres, nous avons reconstruit le couple total simulé par notre modèle dynamique complet pour le comparer aux couples réels mesurés sur les moteurs. Les erreurs relatives observées sur les deux axes restent faibles et centrées sur zéro, ce qui valide expérimentalement notre démarche d'identification séquentielle (termes statiques puis dynamiques) et la pertinence du modèle adopté.
 
-Les paramètres $k_1$ et $b_1$ ne peuvent alors plus être correctement
-identifiés. Le modèle est donc réduit afin de ne conserver que les
-paramètres identifiables :
-\[
-p_r =
-[k_0,\ k_2,\ b_0,\ b_2,\ m_1+m_2,\ m_3]^T.
-\]
-
-Pour ce modèle réduit, nous obtenons $\mathrm{cond}(A)=98$.
-Les erreurs obtenues sont notamment de $0.12\%$ pour $k_0$,
-$1.22\%$ pour $b_0$, $4.30\%$ pour $b_2$ et $4.84\%$ pour $m_3$.
-L'erreur sur $m_1+m_2$ reste cependant plus importante, avec $33.35\%$.
-
-% ============================
-% Conclusion
-% ============================
-\section*{Conclusion}
-???
-
-\balance
 \end{document}
