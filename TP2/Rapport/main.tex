@@ -32,236 +32,226 @@
 % ============================
 \title{\vspace{-6mm}\textbf{TP2: Identification de la dynamique d'un robot manipulateur à deux axes
 Linéaire}}
-\author{Léo Sabatié, Esteban Peregrina \quad (Groupe 2, ROB5) \\ Enseignant: Mahdi Khoramshahi \quad École: Polytech Sorbonne}
+\author{Léo Sabatié, Esteban Peregrina \quad (Groupe 2, ROB5) \\ 
+Enseignant: Mahdi Khoramshahi \quad École: Polytech Sorbonne}
 \date{\today}
 
 \begin{document}
 \maketitle
-
 % ============================
 %           Sections
 % ============================
-\section{Étude Théorique}
-```latex
+\section{Étude théorique}
 \subsection{Modèle dynamique avec un paramétrage relatif}
 
-La méthode de Newton--Euler permet d'écrire le modèle dynamique du robot sous la forme suivante :
+La méthode de Newton-Euler permet d'écrire le modèle dynamique 
+d'un robot série à $N$ segments $S_i$.
+
+À partir des torseurs cinématique et cinétique de chaque segment, 
+ainsi que de leur accélération exprimée en leur centre de gravité. \\
+On considère alors un système $\Sigma = \{\}$. Pour $i$ allant de
+$1$ à $N$, on applique (en fonction de la liaison courante) soit 
+le théorème du moment dynamique soit le théorème de la résultante dynamique, 
+au système $\Sigma = \Sigma \cup \{S_i\}$. En projetant sur l'axe de l'articulation 
+considérée, on aboutit aux équations dynamique du système qui peuvent être mis
+sous la forme matricielle suivante :
 \begin{equation}
-\begin{aligned}
-\begin{pmatrix}
-\Gamma_1\\
-\Gamma_2
-\end{pmatrix}
-&=
-\underbrace{
-\begin{pmatrix}
-I'_1 + I'_2 + m_2l_1^2 + 2h\cos(\theta_2)
-&
-I'_2 + h\cos(\theta_2)
-\\
-I'_2 + h\cos(\theta_2)
-&
-I'_2
-\end{pmatrix}
-}_{A(\mathbf{q})}
-\begin{pmatrix}
-\ddot{\theta}_1\\
-\ddot{\theta}_2
-\end{pmatrix}
-\\[0.5em]
-&\quad+
-\underbrace{
-\begin{pmatrix}
--2h\sin(\theta_2)\\
-0
-\end{pmatrix}
-}_{B(\mathbf{q})}
-\dot{\theta}_1\dot{\theta}_2
-\\[0.5em]
-&\quad+
-\underbrace{
-\begin{pmatrix}
-0 & -h\sin(\theta_2)\\
-h\sin(\theta_2) & 0
-\end{pmatrix}
-}_{C(\mathbf{q})}
-\begin{pmatrix}
-\dot{\theta}_1\\
-\dot{\theta}_2
-\end{pmatrix}
-\\[0.5em]
-&\quad+
-g\,
-\underbrace{
-\begin{pmatrix}
-m_2\lambda_2\cos(\theta_1+\theta_2)
-+m_1\lambda_1\cos(\theta_1)
-\\
-m_2\lambda_2\cos(\theta_1+\theta_2)
-\end{pmatrix}
-}_{\mathbf{g}(\mathbf{q})}.
-\end{aligned}
+  [A(q)][\ddot{q}] + [B(q,\dot{q})]+[C(q)][\dot{q}]+g[g(q)] = [\Gamma]
+\label{eq:modele_general}
+\end{equation}
+
+En l'occurence, le robot étudié n'est ici formé que de deux segments en liaison pivot.
+L'application du théorème du moment dynamique au centre de la liason et projeté sur l'axe
+du pivot donne : 
+\begin{equation}
+  \begin{aligned}
+    \begin{pmatrix}
+      \Gamma_1 \\
+      \Gamma_2
+    \end{pmatrix}
+    &=
+    \underbrace{
+      \begin{pmatrix}
+        I'_1 + I'_2 + m_2l_1^2 + 2h\cos(\theta_2) & I'_2 + h\cos(\theta_2) \\
+        I'_2 + h\cos(\theta_2) & I'_2
+      \end{pmatrix}
+    }_{A(\mathbf{q})}
+    \begin{pmatrix}
+      \ddot{\theta}_1 \\
+      \ddot{\theta}_2
+    \end{pmatrix}
+    \\[0.5em]
+    &\quad+
+    \underbrace{
+      \begin{pmatrix}
+        -2h\sin(\theta_2) \\
+        0
+      \end{pmatrix}
+    }_{B(\mathbf{q})}
+    \dot{\theta}_1\dot{\theta}_2
+    \\[0.5em]
+    &\quad+
+    \underbrace{
+      \begin{pmatrix}
+        0 & -h\sin(\theta_2) \\
+        h\sin(\theta_2) & 0
+      \end{pmatrix}
+    }_{C(\mathbf{q})}
+    \begin{pmatrix}
+      \dot{\theta}_1 \\
+      \dot{\theta}_2
+    \end{pmatrix}
+    \\[0.5em]
+    &\quad+
+    g\,
+    \underbrace{
+      \begin{pmatrix}
+        m_2\lambda_2\cos(\theta_1+\theta_2) + m_1\lambda_1\cos(\theta_1) \\
+        m_2\lambda_2\cos(\theta_1+\theta_2)
+      \end{pmatrix}
+    }_{\mathbf{g}(\mathbf{q})}.
+  \end{aligned}
 \label{eq:modele_relatif}
 \end{equation}
 
 Les paramètres regroupés dans ce modèle sont définis par :
 \begin{equation}
-\begin{aligned}
-I'_1 &= I_1 + m_1\lambda_1^2,\\
-I'_2 &= I_2 + m_2\lambda_2^2,\\
-h &= m_2\lambda_2l_1.
-\end{aligned}
+  \begin{aligned}
+    I'_1 &= I_1 + m_1\lambda_1^2,\\
+    I'_2 &= I_2 + m_2\lambda_2^2,\\
+    h &= m_2\lambda_2l_1.
+  \end{aligned}
 \label{eq:parametres_relatifs}
 \end{equation}
 
-
 \subsection{Réécriture avec un paramétrage absolu}
 
-Jusqu'à présent, le modèle dynamique a été exprimé à l'aide d'un paramétrage relatif des articulations. Dans la suite, nous adoptons un paramétrage absolu, dans lequel $\theta'_1$ et $\theta'_2$ représentent directement les orientations absolues des deux bras.
-
-Ce changement de coordonnées nécessite de transformer à la fois les variables articulaires et les couples associés.
+Jusqu'à présent, le modèle dynamique a été exprimé à l'aide d'un paramétrage relatif des articulations. 
+Dans la suite, nous adoptons un paramétrage absolu, dans lequel $\theta'_1$ et $\theta'_2$ 
+représentent directement les orientations absolues des deux bras. Ce changement de coordonnées 
+nécessite de reparamétrer à la fois les variables articulaires et les couples associés.
 
 La relation entre les coordonnées relatives $\mathbf{q}$ et les coordonnées absolues $\mathbf{q'}$ s'écrit :
 \begin{equation}
-\begin{pmatrix}
-\theta'_1\\
-\theta'_2
-\end{pmatrix}
-=
-\underbrace{
-\begin{pmatrix}
-1 & 0\\
-1 & 1
-\end{pmatrix}
-}_{E}
-\begin{pmatrix}
-\theta_1\\
-\theta_2
-\end{pmatrix}.
+  \begin{pmatrix}
+    \theta'_1\\
+    \theta'_2
+  \end{pmatrix}
+  =
+  \underbrace{
+    \begin{pmatrix}
+    1 & 0\\
+    1 & 1
+    \end{pmatrix}
+  }_{E}
+  \begin{pmatrix}
+    \theta_1\\
+    \theta_2
+  \end{pmatrix}.
 \label{eq:transformation_q}
 \end{equation}
 
 On en déduit les relations inverses :
 \begin{equation}
-\begin{pmatrix}
-\theta_1\\
-\theta_2
-\end{pmatrix}
-=
-E^{-1}
-\begin{pmatrix}
-\theta'_1\\
-\theta'_2
-\end{pmatrix},
-\qquad
-E^{-1}
-=
-\begin{pmatrix}
-1 & 0\\
--1 & 1
-\end{pmatrix}.
+  \begin{pmatrix}
+    \theta_1\\
+    \theta_2
+  \end{pmatrix}
+  =
+  E^{-1}
+  \begin{pmatrix}
+    \theta'_1\\
+    \theta'_2
+  \end{pmatrix},
+  \qquad
+  E^{-1}
+  =
+  \begin{pmatrix}
+    1 & 0\\
+    -1 & 1
+  \end{pmatrix}.
 \label{eq:transformation_q_inverse}
 \end{equation}
 
-Les couples généralisés doivent également être transformés. La relation entre les couples relatifs et absolus est donnée par :
+Les couples doivent également être reparamétrés. La relation entre les couples relatifs 
+et absolus est donnée par :
 \begin{equation}
-\begin{pmatrix}
-\Gamma'_1\\
-\Gamma'_2
-\end{pmatrix}
-=
-E^{-T}
-\begin{pmatrix}
-\Gamma_1\\
-\Gamma_2
-\end{pmatrix},
-\end{equation}
-avec
-\begin{equation}
-E^{-T}
-=
-\begin{pmatrix}
-1 & -1\\
-0 & 1
-\end{pmatrix}.
+  \begin{aligned}
+    \begin{pmatrix}
+      \Gamma'_1\\
+      \Gamma'_2
+    \end{pmatrix}
+    &=
+    E^{-T}
+    \begin{pmatrix}
+      \Gamma_1\\
+      \Gamma_2
+    \end{pmatrix}, \\
+    \text{avec} \quad E^{-T}
+    &=
+    E^{T} \times E^{-1}
+    =
+    \begin{pmatrix}
+      1 & -1\\
+      0 & 1
+    \end{pmatrix}.
+  \end{aligned}
 \label{eq:transformation_gamma}
 \end{equation}
 
-En appliquant ces transformations au modèle dynamique \eqref{eq:modele_relatif}, on obtient :
+On peut utiliser ces relations pour trouver l'expression de $\theta_1', \theta_2', \Gamma_1', \Gamma_2',$
+en fonction des paramètres relatifs. 
+En injectant ces expressions dans le modèle dynamique \eqref{eq:modele_relatif}, et après
+après développement et regroupement des différents termes, le modèle dynamique exprimé dans 
+les coordonnées absolues prend finalement la forme :
 \begin{equation}
-\begin{aligned}
-\boldsymbol{\Gamma}'
-&=
-E^{-T}A(\mathbf{q})E^{-1}\ddot{\mathbf{q}}'
-+
-E^{-T}B(\mathbf{q})
-\left(\dot{\theta}'_1{}^2
-+\dot{\theta}'_1\dot{\theta}'_2\right)
-\\
-&\quad+
-E^{-T}C(\mathbf{q})E^{-1}\dot{\mathbf{q}}'
-+
-E^{-T}\mathbf{g}(\mathbf{q}).
-\end{aligned}
-\label{eq:transformation_modele}
-\end{equation}
-
-Après développement et regroupement des différents termes, le modèle dynamique exprimé dans les coordonnées absolues prend finalement la forme :
-\begin{equation}
-\begin{aligned}
-\begin{pmatrix}
-\Gamma'_1\\
-\Gamma'_2
-\end{pmatrix}
-&=
-\underbrace{
-\begin{pmatrix}
-I'_1 + m_2l_1^2
-&
-h\cos(\theta'_2-\theta'_1)
-\\
-h\cos(\theta'_2-\theta'_1)
-&
-I'_2
-\end{pmatrix}
-}_{A'(\mathbf{q}')}
-\begin{pmatrix}
-\ddot{\theta}'_1\\
-\ddot{\theta}'_2
-\end{pmatrix}
-\\[0.5em]
-&\quad+
-\underbrace{
-\begin{pmatrix}
-0\\
-0
-\end{pmatrix}
-}_{B'(\mathbf{q}')}
-\dot{\theta}'_1\dot{\theta}'_2
-\\[0.5em]
-&\quad+
-\underbrace{
-\begin{pmatrix}
-0 & -h\sin(\theta'_2-\theta'_1)
-\\
-h\sin(\theta'_2-\theta'_1) & 0
-\end{pmatrix}
-}_{C'(\mathbf{q}')}
-\begin{pmatrix}
-\dot{\theta}'_1\\
-\dot{\theta}'_2
-\end{pmatrix}
-\\[0.5em]
-&\quad+
-g\,
-\underbrace{
-\begin{pmatrix}
-(m_2l_1+m_1\lambda_1)\cos(\theta'_1)
-\\
-m_2\lambda_2\cos(\theta'_2)
-\end{pmatrix}
-}_{\mathbf{g}'(\mathbf{q}')}.
-\end{aligned}
+  \begin{aligned}
+    \begin{pmatrix}
+      \Gamma'_1\\
+      \Gamma'_2
+    \end{pmatrix}
+    &=
+    \underbrace{
+      \begin{pmatrix}
+        I'_1 + m_2l_1^2 & h\cos(\theta'_2-\theta'_1) \\
+        h\cos(\theta'_2-\theta'_1) & I'_2
+      \end{pmatrix}
+    }_{A'(\mathbf{q}')}
+    \begin{pmatrix}
+      \ddot{\theta}'_1 \\
+      \ddot{\theta}'_2
+    \end{pmatrix}
+    \\[0.5em]
+    &\quad+
+    \underbrace{
+      \begin{pmatrix}
+        0 \\
+        0
+      \end{pmatrix}
+    }_{B'(\mathbf{q}')}
+    \dot{\theta}'_1\dot{\theta}'_2
+    \\[0.5em]
+    &\quad+
+    \underbrace{
+      \begin{pmatrix}
+        0 & -h\sin(\theta'_2-\theta'_1) \\
+        h\sin(\theta'_2-\theta'_1) & 0
+      \end{pmatrix}
+    }_{C'(\mathbf{q}')}
+    \begin{pmatrix}
+      \dot{\theta}'_1\\
+      \dot{\theta}'_2
+    \end{pmatrix}
+    \\[0.5em]
+    &\quad+
+    g\,
+    \underbrace{
+      \begin{pmatrix}
+        (m_2l_1+m_1\lambda_1)\cos(\theta'_1) \\
+        m_2\lambda_2\cos(\theta'_2)
+      \end{pmatrix}
+    }_{\mathbf{g}'(\mathbf{q}')}.
+  \end{aligned}
 \label{eq:modele_absolu}
 \end{equation}
 
@@ -269,17 +259,39 @@ On remarque notamment que, dans le paramétrage absolu, le terme
 \[
 B'(\mathbf{q}')\dot{\theta}'_1\dot{\theta}'_2
 \]
-est nul. Les termes dépendant des vitesses sont alors regroupés dans la matrice $C'(\mathbf{q}')$.
-```
+est nul. Tous les termes dépendant des vitesses sont alors regroupés dans la matrice $C'(\mathbf{q}')$.
 
+Le couple de gravité exercé sur l'axe 1 ne dépent plus de la position de l'axe 2 car la 
+liaison pivot n'est plus actionnée. Cette dernière étant supposée parfaite, aucun effort
+ne peut être transmis par l'axe 2. Le référentiel n'étant plus en rotation, les effets de Corriolis
+(matrice $B'(q)$) sont nuls. Lorsque $cos(\theta_2' - \theta_1') = 0$, cela signifie que le bras est tendu
+et l'inertie correspond à celle d'un axe simple, la symétrie annulant les produit d'inertie de la matrice
+d'inertie.
 
 \subsection{Intégration de la dynamique des actionneurs}
-
+L'intégration de la dynamique des actionneurs se fait en remplaçant le membre de gauche de
+\eqref{eq:modele_relatif} par le modèle fourni. Il faut développer l'équation matricielle puis rassembler
+les termes $\ddot\theta$ dans la matrice d'inertie.
 
 \subsection{Identification des frottements et des termes de gravité}
+Afin d'identifier les paramètres de frottement et de gravité du système, on simplifie le modèle 
+en faisant l'hypothèse que l'axe 1 est immobile et que l'axe 2 se déplace à vitesse constante.
+Ainsi, on peut aboutir la relation linéaire suivante entre le couple du second reducteur  $\Gamma_1$ 
+et nos paramètres $p$ : 
+
+Afin de résoudre l'équation sur MATLAB, il faudra réaliser un minimum de $n_p = 4$ mesures de $Y$ notées 
+$Y_k$ pour $k \in \{1,2,3,4\}$ et qu'on concatenera dans une matrice carré (donc inversible). Le terme
+de gauche sera construit par concaténation des entrées ayant produites les mesures (seul le courant $i_2$ 
+varie). Davantage de mesures permettent d'obtenir un système surdéterminé pour affiner les résultats.
+
+Pour l'axe 1, on supposera que l'axe 1 se déplace à vitesse constante, et on prendra $\theta_1', \theta_2'$
+tel que, à tout instant, $cos(\theta_2' - \theta_1') = 0$. On procède ensuite de la même 
+façon qu'avec l'axe 2.
 
 
 \subsection{Identification des autres termes du modèle dynamique}
+En développant l'équation (5) et en rassemblant les paramètres dynamique restant, on aboutit à l'équation
+suivante :  
 
 \section{Manipulations}
 \subsection{Identification des frottements et de la gravité sur l'axe 2}
@@ -299,7 +311,7 @@ est nul. Les termes dépendant des vitesses sont alors regroupés dans la matric
 \end{figure}
 
 Lorsque nous utilisons les données brutes pour estimer les paramètres, on peut observer une plus grande dispertion des points autour de la diagonale
-Cette dispersion traduit des écarts plus importants entre les valeurs mesurées et les valeurs estimées par le modèle, notamment en raison du bruit présent dans les mesures. Après filtrage des données, les points se rapprochent davantage de la droite (y=\hat{y}), ce qui indique une diminution des écarts entre les mesures et les estimations et donc une meilleure concordance avec le modèle identifié.
+Cette dispersion traduit des écarts plus importants entre les valeurs mesurées et les valeurs estimées par le modèle, notamment en raison du bruit présent dans les mesures. Après filtrage des données, les points se rapprochent davantage de la droite ($y=\hat{y}$), ce qui indique une diminution des écarts entre les mesures et les estimations et donc une meilleure concordance avec le modèle identifié.
 
 
 
