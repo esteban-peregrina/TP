@@ -9,6 +9,7 @@
 \usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{amsmath}
+\usepackage{placeins}
 
 % ---- Layout ----
 \usepackage{geometry}
@@ -407,6 +408,8 @@ Lorsque nous utilisons les données brutes pour estimer les paramètres, on peut
 L'identification sur MATLAB avec les données filtrées donne les résultats suivants pour l'axe 2 : 
 $\alpha_2 \approx 0.0829$, $a_2 \approx 0.0582$, $b_2 \approx 0.0019$ et $c_2 \approx -0.0123$.
 
+\FloatBarrier
+
 \subsection{Identification des frottements et de la gravité sur l'axe 1}
 En appliquant la même méthodologie sur l'axe 1 à partir du fichier de données \texttt{releve\_vit\_cste\_axe1.mat} et en filtrant les signaux, nous avons pu identifier les paramètres spécifiques au premier axe. 
 
@@ -416,17 +419,64 @@ $\alpha_1 \approx 0.8721$, $a_1 \approx 0.1755$, $b_1 \approx 0.0060$ et $c_1 \a
 On remarque logiquement que les paramètres de gravité ($\alpha_1$) et de frottement sec ($a_1$) sont nettement plus élevés que pour l'axe 2, l'axe 1 devant supporter et entraîner la masse totale de l'axe 2 en plus de la sienne, au travers d'un réducteur dont le rapport de réduction est plus important ($N_1 = 20.25$ contre $N_2 = 4.5$).
 
 \subsection{Identification des autres termes du modèle dynamique}
-Grâce aux valeurs de gravité et de frottements précédemment calculées, nous avons pu isoler les couples liés à l'inertie et aux forces centrifuges en exploitant les essais de mouvements combinés.
+Grâce aux valeurs de gravité et de frottements précédemment calculées, nous avons pu isoler les couples liés à l'inertie et aux forces centrifuges en exploitant les essais de mouvements combinés des deux axes.
 
 La construction de la matrice $Z$ à partir des données filtrées (\texttt{qppfil1}, \texttt{qppfil2}, etc.) a permis d'obtenir un problème bien posé pour l'identification des 3 paramètres d'inertie.
 Les résultats obtenus sont :
+\[
+u_{\mathrm{dyn}} = Zp_{\mathrm{dyn}},
+\]
+avec
+\[
+p_{\mathrm{dyn}} =
+\begin{pmatrix}
+I'_1+m_2l_1^2+I_{a1}\\
+h\\
+I'_2+I_{a2}
+\end{pmatrix}.
+\]
+
+La résolution par moindres carrés permet d'identifier les trois paramètres
+dynamiques suivants :
 \begin{itemize}
-    \item $p_1 = I'_1 + m_2 l_1^2 + I_{a1} \approx 2.479$
-    \item $p_2 = h \approx 0.231$
-    \item $p_3 = I'_2 + I_{a2} \approx 0.171$
+    \item $p_1 = I'_1 + m_2 l_1^2 + I_{a1} \approx 2.479$ ;
+    \item $p_2 = h \approx 0.231$ ;
+    \item $p_3 = I'_2 + I_{a2} \approx 0.171$.
 \end{itemize}
 
-Afin de valider ces paramètres, nous avons reconstruit le couple total simulé par notre modèle dynamique complet pour le comparer aux couples réels mesurés sur les moteurs. Les erreurs relatives observées sur les deux axes restent faibles et centrées sur zéro, ce qui valide expérimentalement notre démarche d'identification séquentielle (termes statiques puis dynamiques) et la pertinence du modèle adopté.
+Ces paramètres regroupent les contributions d'inertie du robot et des actionneurs. Le paramètre $p_1$ correspond ainsi à l'inertie équivalente associée au premier axe, tandis que $p_3$ représente celle associé au second axe. Le paramètre $p_2$ caractérise quant à lui le couplage dynamique entre les deux articulations.
+
+Afin de valider ces paramètres, nous avons reconstruit le couple total simulé par notre modèle dynamique complet pour le comparer aux couples réels mesurés sur les moteurs. Les erreurs relatives observées sur les deux axes restent faibles et centrées sur zéro, ce qui valide expérimentalement notre démarche d'identification séquentielle (termes statiques puis dynamiques) et la pertinence du modèle adopté.\\
+
+La figure ~\ref{fig:validation_dynamique_axe1} et ~\ref{fig:validation_dynamique_axe2} présente cette comparaison pour les deux axes. On observe que le couple reconstruitpar le modèle suit globalement le couple équivalent mesuré. Les différentes contributions permettent ainsi de retrouver les variations du couple au cours du mouvement, notamment celles liées aux variations de configuration, de vitesse et d'accélération.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{validation_dynamique.png}
+    \caption{Comparaison entre le couple équivalent mesuré et le couple
+    total reconstruit par le modèle dynamique pour l'axe 1.}
+    \label{fig:validation_dynamique_axe1}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{validation_dynamique_axe2.png}
+    \caption{Comparaison entre le couple équivalent mesuré et le couple
+    total reconstruit par le modèle dynamique pour l'axe 2.}
+    \label{fig:validation_dynamique_axe2}
+\end{figure}
+
+\FloatBarrier
+
+L'erreur de reconstruction, définie par
+\[
+e_i(t)=\Gamma_{\mathrm{eq},i}(t)-\Gamma_{\mathrm{modèle},i}(t),
+\]
+reste faible et est globalement centrée autour de zéro sur les deux axes.
+Cette validation permet donc de vérifier la cohérence des paramètres
+identifiés et de la démarche d'identification séquentielle, consistant à
+identifier dans un premier temps les termes statiques (gravité et
+frottements), puis les paramètres dynamiques.
+
 % ============================
 % Conclusion
 % ============================
