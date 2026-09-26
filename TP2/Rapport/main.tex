@@ -1,7 +1,7 @@
 % ============================
 % TP Report – Simple Two-Column Template
 % ============================
-\documentclass[10pt,a4paper]{article}
+\documentclass[10pt,a4paper,twocolumn]{article}
 
 % ---- Encoding & typography (simple, portable) ----
 \usepackage[utf8]{inputenc}
@@ -18,6 +18,8 @@
   top=1.5cm, bottom=1.5cm,
   columnsep=0.55cm
 }
+
+\usepackage{balance} % balances the final page columns
 
 % ---- Graphics ----
 \usepackage{graphicx}
@@ -413,14 +415,14 @@ La résolution par les moindres carrés permet alors d'identifier ces 3 derniers
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[width=0.45\textwidth]{Comparaison_valeurs_mesurées_estimées.png} % Ajusté à 0.45 pour twocolumn
+  \includegraphics[width=0.3\textwidth]{Comparaison_valeurs_mesurées_estimées.png} % Ajusté à 0.45 pour twocolumn
   \caption{Comparaison entre les valeurs mesurées et les valeurs estimées par le modèle avec les données brutes ($i_2$ et $q_p$)}
   \label{fig:comparaison_brute_axe2}
 \end{figure}
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[width=0.45\textwidth]{Comparaison_valeurs_mesurées_estimées_filtre.png} % Ajusté à 0.45 pour twocolumn
+  \includegraphics[width=0.3\textwidth]{Comparaison_valeurs_mesurées_estimées_filtre.png} % Ajusté à 0.45 pour twocolumn
   \caption{Comparaison entre les valeurs mesurées et les valeurs estimées par le modèle avec les données filtrées ($i_{2,fil}$ et $q_{p,fil}$).}
   \label{fig:comparaison_filtree_axe2}
 \end{figure}
@@ -498,7 +500,7 @@ permettent ainsi de retrouver les variations du couple au cours du mouvement, no
 celles liées aux variations de configuration, de vitesse et d'accélération.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.8\textwidth]{validation_dynamique.png}
+    \includegraphics[width=0.3\textwidth]{validation_dynamique.png}
     \caption{Comparaison entre le couple équivalent mesuré et le couple
     total reconstruit par le modèle dynamique pour l'axe 1.}
     \label{fig:validation_dynamique_axe1}
@@ -506,7 +508,7 @@ celles liées aux variations de configuration, de vitesse et d'accélération.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.8\textwidth]{validation_dynamique_axe2.png}
+    \includegraphics[width=0.3\textwidth]{validation_dynamique_axe2.png}
     \caption{Comparaison entre le couple équivalent mesuré et le couple
     total reconstruit par le modèle dynamique pour l'axe 2.}
     \label{fig:validation_dynamique_axe2}
@@ -541,4 +543,7 @@ Enfin, nous avons pu constater l'impact crucial du filtrage des données issues 
 la dérivation numérique des signaux bruités pouvant fortement dégrader 
 la qualité de la matrice $Z$ et, *in fine*, la robustesse de l'identification 
 au sens des moindres carrés.
+
+\balance
+
 \end{document}
