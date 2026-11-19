@@ -31,8 +31,8 @@ disp(theta_LS');
 
 %% Initilisiation RLS
 
-lambda = 0.99;
-sigma = 100;
+lambda = 1;
+sigma = 0.1; % mieux car plus petit, ca se stavilise moins vite
 P = sigma * eye(4); % initial covariance matrix
 theta = zeros(4,1);
 theta_history = zeros(4,N);
@@ -112,3 +112,8 @@ disp('Comparaison LS / RLS :');
 
 disp('       LS          RLS');
 disp([theta_LS theta]);
+
+
+%% Sauvegarde des resultats RLS
+
+save('resultats_RLS.mat', 'theta_history', 'theta', 'error_history', 'theta_LS');
